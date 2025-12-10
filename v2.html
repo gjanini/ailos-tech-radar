@@ -1,823 +1,324 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <title>Tech Radar 2.0 - Ailos</title>
+  <meta charset="UTF-8" />
+  <title>Tech Radar 2.0 - Ailos</title>
 
-    <!-- Libs do radar da Zalando (baseado no ThoughtWorks) -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="https://zalando.github.io/tech-radar/release/radar-0.12.js"></script>
+  <!-- D3 + Radar da Zalando (versão oficial 0.12) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://zalando.github.io/tech-radar/release/radar-0.12.js"></script>
 
-    <style>
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #0b1020;
-            color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050816;
+      color: #f5f5f5;
+    }
 
-        header {
-            padding: 16px 24px;
-            background: #111728;
-            border-bottom: 1px solid #262b3e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    header {
+      background: #0b1020;
+      padding: 14px 24px;
+      border-bottom: 1px solid #262b3e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 20px;
-        }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
 
-        header span {
-            font-size: 13px;
-            opacity: 0.8;
-        }
+    header span {
+      font-size: 12px;
+      opacity: 0.8;
+    }
 
-        main {
-            max-width: 1200px;
-            margin: 24px auto 40px;
-            padding: 0 16px;
-        }
+    main {
+      max-width: 1200px;
+      margin: 16px auto 40px;
+      padding: 0 16px 40px;
+    }
 
-        .subtitle {
-            font-size: 14px;
-            margin-bottom: 16px;
-            opacity: 0.9;
-        }
+    .subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
 
-        /* --- área do gráfico circular --- */
-        .chart-section {
-            background: #111728;
-            border-radius: 12px;
-            border: 1px solid #262b3e;
-            padding: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.35);
-        }
+    .chart-wrapper {
+      background: #0b1020;
+      border-radius: 12px;
+      border: 1px solid #262b3e;
+      padding: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+      overflow: auto;
+    }
 
-        #radar-svg {
-            width: 100%;
-            height: 600px;
-        }
+    /* o SVG fica responsivo na largura */
+    #radar {
+      width: 100%;
+      height: 720px;
+    }
 
-        .chart-caption {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        /* --- cards de quadrantes (seu layout anterior) --- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        @media (max-width: 800px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .quadrant-card {
-            background: #151b30;
-            border-radius: 12px;
-            padding: 16px 18px 12px;
-            border: 1px solid #262b3e;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.35);
-        }
-
-        .quadrant-title {
-            margin: 0 0 4px;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .quadrant-tag {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            opacity: 0.7;
-        }
-
-        .ring-block {
-            margin-top: 10px;
-        }
-
-        .ring-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin: 0 0 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .ring-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 999px;
-            border: 1px solid;
-        }
-
-        .ring-adopt {
-            color: #7fffd4;
-            border-color: #7fffd4;
-        }
-        .ring-trial {
-            color: #87cefa;
-            border-color: #87cefa;
-        }
-        .ring-assess {
-            color: #ffd580;
-            border-color: #ffd580;
-        }
-        .ring-hold {
-            color: #ff7f7f;
-            border-color: #ff7f7f;
-        }
-
-        .item-list {
-            list-style: none;
-            margin: 0 0 4px;
-            padding-left: 0;
-        }
-
-        .item-list li {
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-
-        .item-name {
-            font-weight: 500;
-        }
-
-        .item-new {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #98fb98;
-            margin-left: 6px;
-        }
-
-        .item-desc {
-            font-size: 11px;
-            opacity: 0.8;
-        }
-
-        footer {
-            text-align: center;
-            font-size: 11px;
-            opacity: 0.6;
-            margin-top: 28px;
-        }
-    </style>
+    footer {
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 16px;
+    }
+  </style>
 </head>
 <body>
 <header>
-    <div>
-        <h1>Tech Radar 2.0 - Ailos</h1>
-        <span>Versão experimental com visual circular estilo ThoughtWorks.</span>
-    </div>
-    <span>Versão 2.0 (beta)</span>
+  <div>
+    <h1>Tech Radar 2.0 - Ailos</h1>
+    <span>Versão experimental com visual circular estilo ThoughtWorks/Zalando.</span>
+  </div>
+  <span>Versão 2.0 (beta)</span>
 </header>
 
 <main>
-    <p class="subtitle">
-        Visualização de tecnologias organizadas por Quadrante (Techniques, Tools, Platforms, Languages &amp; Frameworks)
-        e Ring (Adopt, Trial, Assess, Hold).
-    </p>
+  <p class="subtitle">
+    Visualização de tecnologias organizadas por Quadrante (Techniques, Tools, Platforms, Languages &amp; Frameworks)
+    e Ring (Adopt, Trial, Assess, Hold).
+  </p>
 
-    <!-- Gráfico circular estilo ThoughtWorks/Zalando -->
-    <section class="chart-section">
-        <svg id="radar-svg"></svg>
-        <div class="chart-caption">
-            Visualização circular baseada em <code>radar.js</code> (Zalando Tech Radar).
-        </div>
-    </section>
+  <div class="chart-wrapper">
+    <!-- SVG vazio: o radar.js vai desenhar tudo aqui -->
+    <svg id="radar"></svg>
+  </div>
 
-    <!-- Seus cards por quadrante (lista detalhada) -->
-    <div id="radar-cards" class="grid"></div>
-
-    <footer>
-        Criado por Graciele. Versão 2.0 dinamico
-    </footer>
+  <footer>
+    Visualização circular baseada em <strong>radar-0.12.js</strong> (Zalando Tech Radar).<br />
+    Protótipo criado por Graciele para a prateleira de tecnologia da Ailos 💙
+  </footer>
 </main>
 
 <script>
-    // 🔹 Dados do Radar (o mesmo array serve para o gráfico e para os cards)
-    const radarData = [
-        // TECHNIQUES
-        {
-            name: "Domain-Driven Design (DDD)",
-            ring: "Adopt",
-            quadrant: "Techniques",
-            isNew: true,
-            description: "Abordagem para modelagem de domínios, tornando mais simples o que era complexo."
-        },
-        {
-            name: "Event-Driven Architecture (EDA)",
-            ring: "Adopt",
-            quadrant: "Techniques",
-            isNew: false,
-            description: "Técnica para construção de sistemas baseados em eventos."
-        },
-        {
-            name: "Microservice Architecture",
-            ring: "Trial",
-            quadrant: "Techniques",
-            isNew: true,
-            description: "Prática de decomposição de sistemas em serviços menores e independentes."
-        },
-        {
-            name: "Hexagonal Architecture",
-            ring: "Trial",
-            quadrant: "Techniques",
-            isNew: true,
-            description: "Também conhecida como Ports and Adapters, desacopla o domínio das dependências externas."
-        },
+  // -------------------------
+  // 1) DADOS EM ESTILO JSON
+  // -------------------------
+  const radarData = [
+    // TECHNIQUES
+    {
+      name: "Domain-Driven Design (DDD)",
+      ring: "Adopt",
+      quadrant: "Techniques",
+      isNew: true,
+      description: "Abordagem para modelagem de domínios, tornando mais simples o que era complexo."
+    },
+    {
+      name: "Event-Driven Architecture (EDA)",
+      ring: "Adopt",
+      quadrant: "Techniques",
+      isNew: false,
+      description: "Técnica para construção de sistemas baseados em eventos."
+    },
+    {
+      name: "Microservice Architecture",
+      ring: "Trial",
+      quadrant: "Techniques",
+      isNew: true,
+      description: "Prática de decomposição de sistemas em serviços menores e independentes."
+    },
+    {
+      name: "Hexagonal Architecture",
+      ring: "Trial",
+      quadrant: "Techniques",
+      isNew: true,
+      description: "Ports and Adapters: desacopla o domínio das dependências externas."
+    },
 
-        // PLATFORMS – Integração / APIs / Mensageria
-        {
-            name: "MuleSoft",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de integração e exposição de APIs."
-        },
-        {
-            name: "Sensedia API Management",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Gateway para gerenciamento, exposição e governança de APIs."
-        },
-        {
-            name: "Kafka",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de streaming de eventos e mensageria distribuída."
-        },
-        {
-            name: "AWS Lambda",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Execução de código serverless sob demanda na AWS."
-        },
-        {
-            name: "Azure Function",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Execução de código serverless sob demanda na Azure."
-        },
-        {
-            name: "AWS API Gateway",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Gerenciamento e exposição de APIs na AWS."
-        },
-        {
-            name: "WSO2",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de API Management e integração."
-        },
+    // PLATFORMS – Integração / APIs / Mensageria
+    { name: "MuleSoft", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de integração e exposição de APIs." },
+    { name: "Sensedia API Management", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Gateway para gerenciamento, exposição e governança de APIs." },
+    { name: "Kafka", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de streaming de eventos e mensageria distribuída." },
+    { name: "AWS Lambda", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Execução de código serverless sob demanda na AWS." },
+    { name: "Azure Function", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Execução de código serverless sob demanda na Azure." },
+    { name: "AWS API Gateway", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Gerenciamento e exposição de APIs na AWS." },
+    { name: "WSO2", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de API Management e integração." },
 
-        // PLATFORMS – Dados
-        {
-            name: "Databricks",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de lakehouse para processamento e análise de dados."
-        },
-        {
-            name: "Oracle",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco de dados relacional."
-        },
-        {
-            name: "MySQL",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco de dados relacional open source."
-        },
-        {
-            name: "PostgreSQL",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco de dados relacional avançado, padrão de mercado."
-        },
-        {
-            name: "SQL Server",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco de dados relacional Microsoft."
-        },
-        {
-            name: "Dataverse",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de dados da Microsoft para aplicações de negócio."
-        },
-        {
-            name: "AWS S3",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Armazenamento de objetos escalável na AWS."
-        },
-        {
-            name: "Redis",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco em memória e cache distribuído para alta performance."
-        },
-        {
-            name: "ElastiCache",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Serviço gerenciado de cache na AWS."
-        },
-        {
-            name: "SFTP",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Protocolo seguro para transferência de arquivos."
-        },
-        {
-            name: "MongoDB",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Banco de dados NoSQL orientado a documentos."
-        },
+    // PLATFORMS – Dados
+    { name: "Databricks", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de lakehouse para processamento e análise de dados." },
+    { name: "Oracle", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Banco de dados relacional." },
+    { name: "MySQL", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Banco de dados relacional open source." },
+    { name: "PostgreSQL", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Banco de dados relacional avançado, padrão de mercado." },
+    { name: "SQL Server", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Banco de dados relacional Microsoft." },
+    { name: "Dataverse", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de dados da Microsoft para aplicações de negócio." },
+    { name: "AWS S3", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Armazenamento de objetos escalável na AWS." },
+    { name: "Redis", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Banco em memória e cache distribuído para alta performance." },
+    { name: "ElastiCache", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Serviço gerenciado de cache na AWS." },
+    { name: "SFTP", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Protocolo seguro para transferência de arquivos." },
+    { name: "MongoDB", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Banco de dados NoSQL orientado a documentos." },
 
-        // PLATFORMS – Governança / Dados / Observabilidade
-        {
-            name: "Backstage io",
-            ring: "Trial",
-            quadrant: "Platforms",
-            isNew: true,
-            description: "Developer portal para centralizar serviços, catálogos e documentação técnica."
-        },
-        {
-            name: "MDM",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Gestão de dados mestres corporativos."
-        },
-        {
-            name: "IDQ",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de qualidade e governança de dados."
-        },
-        {
-            name: "Open Metadata",
-            ring: "Assess",
-            quadrant: "Platforms",
-            isNew: true,
-            description: "Solução open source para catálogo e governança de metadados."
-        },
-        {
-            name: "Dynatrace",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Observabilidade e monitoramento de aplicações."
-        },
-        {
-            name: "AWS CloudWatch",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Monitoramento e logs de recursos na AWS."
-        },
-        {
-            name: "Kiali",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Observabilidade para malhas de serviço (service mesh)."
-        },
+    // PLATFORMS – Governança / Dados / Observabilidade
+    { name: "Backstage io", ring: "Trial", quadrant: "Platforms", isNew: true,
+      description: "Developer portal para centralizar serviços, catálogos e documentação técnica." },
+    { name: "MDM", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Gestão de dados mestres corporativos." },
+    { name: "IDQ", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de qualidade e governança de dados." },
+    { name: "Open Metadata", ring: "Assess", quadrant: "Platforms", isNew: true,
+      description: "Solução open source para catálogo e governança de metadados." },
+    { name: "Dynatrace", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Observabilidade e monitoramento de aplicações." },
+    { name: "AWS CloudWatch", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Monitoramento e logs de recursos na AWS." },
+    { name: "Kiali", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Observabilidade para service mesh." },
 
-        // PLATFORMS – Identidade / Segurança
-        {
-            name: "AWS IAM",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Gerenciamento de identidade e permissões na AWS."
-        },
-        {
-            name: "Azure AD",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Gerenciamento de identidade e acesso na Azure."
-        },
-        {
-            name: "OneTrust",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de privacidade, consentimento e conformidade."
-        },
-        {
-            name: "IBM Qradar",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Solução SIEM para monitoramento e correlação de eventos de segurança."
-        },
+    // PLATFORMS – Identidade / Segurança
+    { name: "AWS IAM", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Gerenciamento de identidade e permissões na AWS." },
+    { name: "Azure AD", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Gerenciamento de identidade e acesso na Azure." },
+    { name: "OneTrust", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de privacidade, consentimento e conformidade." },
+    { name: "IBM Qradar", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "SIEM para monitoramento e correlação de eventos de segurança." },
 
-        // PLATFORMS – Orquestração / DevOps
-        {
-            name: "Kubernetes",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Orquestração de contêineres."
-        },
-        {
-            name: "Rancher",
-            ring: "Hold",
-            quadrant: "Platforms",
-            isNew: false,
-            description: "Plataforma de gestão de clusters Kubernetes."
-        },
-        {
-            name: "Argo",
-            ring: "Trial",
-            quadrant: "Platforms",
-            isNew: true,
-            description: "Ferramentas Argo para entrega contínua e orquestração em Kubernetes."
-        },
+    // PLATFORMS – Orquestração / DevOps
+    { name: "Kubernetes", ring: "Adopt", quadrant: "Platforms", isNew: false,
+      description: "Orquestração de contêineres." },
+    { name: "Rancher", ring: "Hold", quadrant: "Platforms", isNew: false,
+      description: "Plataforma de gestão de clusters Kubernetes." },
+    { name: "Argo", ring: "Trial", quadrant: "Platforms", isNew: true,
+      description: "Ferramentas Argo (CD, Workflows, Rollouts) para entrega contínua em Kubernetes." },
 
-        // TOOLS – DevOps / Qualidade / Segurança
-        {
-            name: "Azure DevOps",
-            ring: "Adopt",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Gestão de backlog, repositórios, pipelines e CI/CD."
-        },
-        {
-            name: "SonarQube",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Análise estática de código e qualidade."
-        },
-        {
-            name: "Fortify",
-            ring: "Adopt",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Análise de segurança de código (SAST)."
-        },
-        {
-            name: "Veracode",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Plataforma de análise de segurança de aplicações."
-        },
-        {
-            name: "Appdome",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Segurança e proteção para aplicativos mobile."
-        },
-        {
-            name: "Guardsquare",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Proteção de apps mobile (ofuscação e hardening)."
-        },
-        {
-            name: "IBM RPA",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Ferramenta de automação robótica de processos."
-        },
-        {
-            name: "Power Automate",
-            ring: "Adopt",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Automação de fluxos e integração com o ecossistema Microsoft."
-        },
-        {
-            name: "Ansible",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Automação de configuração e orquestração de infraestrutura."
-        },
-        {
-            name: "Terraform",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Infraestrutura como código para provisionamento em múltiplas clouds."
-        },
-        {
-            name: "Symantec",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Soluções de segurança endpoint e proteção de dados."
-        },
-        {
-            name: "Trend Micro",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Plataforma de segurança para endpoints, servidores e cloud."
-        },
-        {
-            name: "Microsoft Defender",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Proteção e detecção de ameaças no ecossistema Microsoft."
-        },
-        {
-            name: "Nessus",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Ferramenta de varredura de vulnerabilidades."
-        },
-        {
-            name: "Rapid7",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Plataforma de gestão de vulnerabilidades e segurança."
-        },
-        {
-            name: "Stimulsoft",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Ferramenta de relatórios e dashboards."
-        },
-        {
-            name: "Elastic",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Stack Elastic (Elasticsearch, Kibana, etc.) para busca e observabilidade."
-        },
-        {
-            name: "PostSearch",
-            ring: "Hold",
-            quadrant: "Tools",
-            isNew: false,
-            description: "Ferramenta de busca e indexação de conteúdo."
-        },
+    // TOOLS – DevOps / Qualidade / Segurança
+    { name: "Azure DevOps", ring: "Adopt", quadrant: "Tools", isNew: false,
+      description: "Backlog, repositórios, pipelines e CI/CD." },
+    { name: "SonarQube", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Análise estática de código e qualidade." },
+    { name: "Fortify", ring: "Adopt", quadrant: "Tools", isNew: false,
+      description: "Análise de segurança de código (SAST)." },
+    { name: "Veracode", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Plataforma de análise de segurança de aplicações." },
+    { name: "Appdome", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Segurança e proteção para aplicativos mobile." },
+    { name: "Guardsquare", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Proteção de apps mobile (ofuscação e hardening)." },
+    { name: "IBM RPA", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Automação robótica de processos." },
+    { name: "Power Automate", ring: "Adopt", quadrant: "Tools", isNew: false,
+      description: "Automação de fluxos no ecossistema Microsoft." },
+    { name: "Ansible", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Automação de configuração e orquestração." },
+    { name: "Terraform", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Infraestrutura como código multi-cloud." },
+    { name: "Symantec", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Segurança endpoint e proteção de dados." },
+    { name: "Trend Micro", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Segurança para endpoints, servidores e cloud." },
+    { name: "Microsoft Defender", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Proteção e detecção de ameaças no ecossistema Microsoft." },
+    { name: "Nessus", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Varredura de vulnerabilidades." },
+    { name: "Rapid7", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Gestão de vulnerabilidades e segurança." },
+    { name: "Stimulsoft", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Relatórios e dashboards." },
+    { name: "Elastic", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Stack Elastic (Elasticsearch, Kibana, etc.) para busca e observabilidade." },
+    { name: "PostSearch", ring: "Hold", quadrant: "Tools", isNew: false,
+      description: "Ferramenta de busca e indexação." },
 
-        // LANGUAGES & FRAMEWORKS
-        {
-            name: "JavaScript",
-            ring: "Hold",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Linguagem para frontend web e aplicações em geral."
-        },
-        {
-            name: "Tailwind CSS",
-            ring: "Hold",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Framework utilitário de CSS para interfaces web."
-        },
-        {
-            name: "Angular",
-            ring: "Adopt",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Framework frontend para aplicações web SPA."
-        },
-        {
-            name: ".NET",
-            ring: "Adopt",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Plataforma para desenvolvimento backend e serviços."
-        },
-        {
-            name: "Go",
-            ring: "Hold",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Linguagem backend focada em concorrência e performance."
-        },
-        {
-            name: "ASP.NET Core",
-            ring: "Adopt",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Framework backend moderno da plataforma .NET."
-        }
-    ];
+    // LANGUAGES & FRAMEWORKS
+    { name: "JavaScript", ring: "Hold", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Linguagem para frontend e aplicações em geral." },
+    { name: "Tailwind CSS", ring: "Hold", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Framework utilitário de CSS para interfaces web." },
+    { name: "Angular", ring: "Adopt", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Framework SPA para frontend." },
+    { name: ".NET", ring: "Adopt", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Plataforma para desenvolvimento backend e serviços." },
+    { name: "Go", ring: "Hold", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Linguagem backend focada em concorrência e performance." },
+    { name: "ASP.NET Core", ring: "Adopt", quadrant: "Languages & Frameworks", isNew: false,
+      description: "Framework backend moderno na plataforma .NET." }
+  ];
 
-    const quadrants = ["Techniques", "Tools", "Platforms", "Languages & Frameworks"];
-    const ringsOrder = ["Adopt", "Trial", "Assess", "Hold"];
+  // -------------------------
+  // 2) MAPA nomes -> índices
+  // -------------------------
+  const quadrantIndex = {
+    "Techniques": 0,                // Bottom Right
+    "Tools": 1,                     // Bottom Left
+    "Platforms": 2,                 // Top Left
+    "Languages & Frameworks": 3     // Top Right
+  };
 
-    // ---------- GERAÇÃO DO GRÁFICO CIRCULAR (radar.js) ----------
-    function buildRadarEntries(data) {
-        const quadrantIndex = q => {
-            switch (q) {
-                case "Techniques": return 2;              // Top Left
-                case "Tools": return 3;                   // Top Right
-                case "Platforms": return 1;               // Bottom Left
-                case "Languages & Frameworks": return 0;  // Bottom Right
-                default: return 0;
-            }
-        };
+  const ringIndex = {
+    "Adopt": 0,
+    "Trial": 1,
+    "Assess": 2,
+    "Hold": 3
+  };
 
-        const ringIndex = r => {
-            switch (r) {
-                case "Adopt": return 0;
-                case "Trial": return 1;
-                case "Assess": return 2;
-                case "Hold": return 3;
-                default: return 3;
-            }
-        };
+  // -------------------------
+  // 3) CONVERSÃO PARA entries
+  // -------------------------
+  const entries = radarData.map(item => ({
+    label: item.name,
+    quadrant: quadrantIndex[item.quadrant],
+    ring: ringIndex[item.ring],
+    moved: item.isNew ? 2 : 0,   // 2 = new (estrela)
+    active: true,
+    description: item.description
+  }));
 
-        return data.map(item => ({
-            label: item.name,
-            quadrant: quadrantIndex(item.quadrant),
-            ring: ringIndex(item.ring),
-            moved: item.isNew ? 2 : 0   // 2 = novo (estrela), 0 = sem movimento
-        }));
-    }
-
-    function renderCircleRadar() {
-        const entries = buildRadarEntries(radarData);
-
-        radar_visualization({
-            svg_id: "radar-svg",
-            width: 900,
-            height: 900,
-            scale: 0.9,
-            title: "Tech Radar 2.0 - Ailos",
-            quadrants: [
-                { name: "Languages & Frameworks" }, // bottom right
-                { name: "Platforms" },              // bottom left
-                { name: "Techniques" },             // top left
-                { name: "Tools" }                   // top right
-            ],
-            rings: [
-                { name: "ADOPT",  color: "#5ba300" },
-                { name: "TRIAL",  color: "#009eb0" },
-                { name: "ASSESS", color: "#c7ba00" },
-                { name: "HOLD",   color: "#e09b96" }
-            ],
-            print_layout: false,
-            links_in_new_tabs: true,
-            entries: entries
-        });
-    }
-
-    // ---------- CARDS (seu layout anterior) ----------
-    function groupByQuadrantAndRing(data) {
-        const result = {};
-        for (const q of quadrants) {
-            result[q] = {};
-            for (const r of ringsOrder) {
-                result[q][r] = [];
-            }
-        }
-
-        for (const item of data) {
-            if (!result[item.quadrant]) {
-                result[item.quadrant] = {};
-                for (const r of ringsOrder) {
-                    result[item.quadrant][r] = [];
-                }
-            }
-            if (!result[item.quadrant][item.ring]) {
-                result[item.quadrant][item.ring] = [];
-            }
-            result[item.quadrant][item.ring].push(item);
-        }
-        return result;
-    }
-
-    function ringClass(ring) {
-        switch (ring) {
-            case "Adopt": return "ring-badge ring-adopt";
-            case "Trial": return "ring-badge ring-trial";
-            case "Assess": return "ring-badge ring-assess";
-            case "Hold": return "ring-badge ring-hold";
-            default: return "ring-badge";
-        }
-    }
-
-    function renderCards() {
-        const container = document.getElementById("radar-cards");
-        const grouped = groupByQuadrantAndRing(radarData);
-
-        quadrants.forEach(q => {
-            const card = document.createElement("div");
-            card.className = "quadrant-card";
-
-            const title = document.createElement("h2");
-            title.className = "quadrant-title";
-            title.textContent = q;
-            card.appendChild(title);
-
-            const tag = document.createElement("div");
-            tag.className = "quadrant-tag";
-            tag.textContent = "Quadrante";
-            card.appendChild(tag);
-
-            ringsOrder.forEach(ring => {
-                const items = grouped[q][ring] || [];
-                if (!items.length) return;
-
-                const block = document.createElement("div");
-                block.className = "ring-block";
-
-                const ringTitle = document.createElement("div");
-                ringTitle.className = "ring-title";
-                const badge = document.createElement("span");
-                badge.className = ringClass(ring);
-                badge.textContent = ring.toUpperCase();
-                ringTitle.appendChild(badge);
-                block.appendChild(ringTitle);
-
-                const ul = document.createElement("ul");
-                ul.className = "item-list";
-
-                items.forEach(item => {
-                    const li = document.createElement("li");
-
-                    const nameSpan = document.createElement("span");
-                    nameSpan.className = "item-name";
-                    nameSpan.textContent = item.name;
-                    li.appendChild(nameSpan);
-
-                    if (item.isNew) {
-                        const newSpan = document.createElement("span");
-                        newSpan.className = "item-new";
-                        newSpan.textContent = "NEW";
-                        li.appendChild(newSpan);
-                    }
-
-                    if (item.description) {
-                        const descDiv = document.createElement("div");
-                        descDiv.className = "item-desc";
-                        descDiv.textContent = item.description;
-                        li.appendChild(descDiv);
-                    }
-
-                    ul.appendChild(li);
-                });
-
-                block.appendChild(ul);
-                card.appendChild(block);
-            });
-
-            container.appendChild(card);
-        });
-    }
-
-    // inicializa tudo
-    renderCircleRadar();
-    renderCards();
+  // -------------------------
+  // 4) DESENHA O RADAR
+  // -------------------------
+  radar_visualization({
+    repo_url: "https://github.com/gjanini/ailos-tech-radar",
+    svg_id: "radar",
+    width: 1100,
+    height: 900,
+    scale: 1.0,
+    colors: {
+      background: "#0b1020",
+      grid: "#343b5c",
+      inactive: "#2a3045"
+    },
+    font_family: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    title: "Tech Radar 2.0 - Ailos",
+    quadrants: [
+      { name: "Techniques" },             // 0 – Bottom Right
+      { name: "Tools" },                  // 1 – Bottom Left
+      { name: "Platforms" },              // 2 – Top Left
+      { name: "Languages & Frameworks" }  // 3 – Top Right
+    ],
+    rings: [
+      { name: "Adopt",  color: "#5ba300" },
+      { name: "Trial",  color: "#009eb0" },
+      { name: "Assess", color: "#c7ba00" },
+      { name: "Hold",   color: "#e09b96" }
+    ],
+    print_layout: false,
+    links_in_new_tabs: true,
+    entries
+  });
 </script>
 </body>
 </html>
