@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tech Radar - Ailos</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b1220;
+            color: #ffffff;
+        }
+
+        header {
+            background: #111a33;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a355a;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        header span {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        main {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 24px;
+            opacity: 0.85;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #151f3d;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #2a355a;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .ring {
+            margin-bottom: 12px;
+        }
+
+        .ring-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .adopt { color: #6ee7b7; }
+        .trial { color: #93c5fd; }
+        .assess { color: #fde68a; }
+        .hold  { color: #fca5a5; }
+
+        .item {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .desc {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-left: 10px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 11px;
+            margin-top: 40px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Tech Radar - Ailos</h1>
+    <span>Protótipo em estudo</span>
+</header>
+
+<main>
+    <div class="subtitle">
+        Prateleira de Tecnologia da Ailos – versão inicial em estudo.
+    </div>
+
+    <div class="grid">
+
+        <!-- TECHNIQUES -->
+        <div class="card">
+            <h2>Techniques</h2>
+
+            <div class="ring">
+                <div class="ring-title adopt">Adopt</div>
+                <div class="item">Domain-Driven Design (DDD)
+                    <div class="desc">Modelagem de domínio alinhada ao negócio.</div>
+                </div>
+            </div>
+
+            <div class="ring">
+                <div class="ring-title trial">Trial</div>
+                <div class="item">Microservices
+                    <div class="desc">Arquitetura baseada em serviços independentes.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOLS -->
+        <div class="card">
+            <h2>Tools</h2>
+
+            <div class="ring">
+                <div class="ring-title assess">Assess</div>
+                <div class="item">Camunda
+                    <div class="desc">Motor de orquestração de processos BPM.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLATFORMS -->
+        <div class="card">
+            <h2>Platforms</h2>
+
+            <div class="ring">
+                <div class="ring-title adopt">Adopt</div>
+                <div class="item">Azure API Management
+                    <div class="desc">Gateway padrão de APIs internas.</div>
+                </div>
+            </div>
+
+            <div class="ring">
+                <div class="ring-title trial">Trial</div>
+                <div class="item">Kafka
+                    <div class="desc">Plataforma de streaming de eventos.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LANGUAGES & FRAMEWORKS -->
+        <div class="card">
+            <h2>Languages & Frameworks</h2>
+
+            <div class="ring">
+                <div class="ring-title adopt">Adopt</div>
+                <div class="item">Java 21
+                    <div class="desc">Linguagem principal backend.</div>
+                </div>
+                <div class="item">Spring Boot
+                    <div class="desc">Framework padrão para APIs.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        Criado por Graciele
+    </footer>
+</main>
+
+</body>
+</html>
