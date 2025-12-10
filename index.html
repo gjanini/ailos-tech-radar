@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <title>Tech Radar - Ailos</title>
-
     <style>
         body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #0b1020;
+            color: #f5f5f5;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b1220;
-            color: #ffffff;
+            padding: 0;
         }
 
         header {
-            background: #111a33;
             padding: 16px 24px;
+            background: #111728;
+            border-bottom: 1px solid #262b3e;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #2a355a;
         }
 
         header h1 {
@@ -32,156 +32,320 @@
         }
 
         main {
-            padding: 24px;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 24px auto 40px;
+            padding: 0 16px;
         }
 
         .subtitle {
             font-size: 14px;
-            margin-bottom: 24px;
-            opacity: 0.85;
+            margin-bottom: 16px;
+            opacity: 0.9;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
         }
 
-        .card {
-            background: #151f3d;
-            border-radius: 10px;
-            padding: 16px;
-            border: 1px solid #2a355a;
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .card h2 {
-            margin: 0 0 10px;
-            font-size: 16px;
+        .quadrant-card {
+            background: #151b30;
+            border-radius: 12px;
+            padding: 16px 18px 12px;
+            border: 1px solid #262b3e;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.35);
         }
 
-        .ring {
-            margin-bottom: 12px;
+        .quadrant-title {
+            margin: 0 0 4px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .quadrant-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.7;
+        }
+
+        .ring-block {
+            margin-top: 10px;
         }
 
         .ring-title {
             font-size: 12px;
-            font-weight: bold;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            letter-spacing: 0.08em;
+            margin: 0 0 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .adopt { color: #6ee7b7; }
-        .trial { color: #93c5fd; }
-        .assess { color: #fde68a; }
-        .hold  { color: #fca5a5; }
+        .ring-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            border: 1px solid;
+        }
 
-        .item {
+        .ring-adopt {
+            color: #7fffd4;
+            border-color: #7fffd4;
+        }
+        .ring-trial {
+            color: #87cefa;
+            border-color: #87cefa;
+        }
+        .ring-assess {
+            color: #ffd580;
+            border-color: #ffd580;
+        }
+        .ring-hold {
+            color: #ff7f7f;
+            border-color: #ff7f7f;
+        }
+
+        .item-list {
+            list-style: none;
+            margin: 0 0 4px;
+            padding-left: 0;
+        }
+
+        .item-list li {
             font-size: 13px;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
         }
 
-        .desc {
+        .item-name {
+            font-weight: 500;
+        }
+
+        .item-new {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #98fb98;
+            margin-left: 6px;
+        }
+
+        .item-desc {
             font-size: 11px;
             opacity: 0.8;
-            margin-left: 10px;
         }
 
         footer {
             text-align: center;
             font-size: 11px;
-            margin-top: 40px;
             opacity: 0.6;
+            margin-top: 28px;
         }
     </style>
 </head>
-
 <body>
-
 <header>
-    <h1>Tech Radar - Ailos</h1>
-    <span>Protótipo em estudo</span>
+    <div>
+        <h1>Tech Radar - Ailos</h1>
+        <span>Prateleira de Tecnologia da Ailos – protótipo em estudo.</span>
+    </div>
+    <span>Versão 0.1</span>
 </header>
 
 <main>
-    <div class="subtitle">
-        Prateleira de Tecnologia da Ailos – versão inicial em estudo.
-    </div>
+    <p class="subtitle">
+        Visualização de tecnologias organizadas por Quadrante (Techniques, Tools, Platforms, Languages & Frameworks)
+        e Ring (Adopt, Trial, Assess, Hold). Os dados abaixo estão em uma estrutura tipo JSON dentro da própria página.
+    </p>
 
-    <div class="grid">
-
-        <!-- TECHNIQUES -->
-        <div class="card">
-            <h2>Techniques</h2>
-
-            <div class="ring">
-                <div class="ring-title adopt">Adopt</div>
-                <div class="item">Domain-Driven Design (DDD)
-                    <div class="desc">Modelagem de domínio alinhada ao negócio.</div>
-                </div>
-            </div>
-
-            <div class="ring">
-                <div class="ring-title trial">Trial</div>
-                <div class="item">Microservices
-                    <div class="desc">Arquitetura baseada em serviços independentes.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TOOLS -->
-        <div class="card">
-            <h2>Tools</h2>
-
-            <div class="ring">
-                <div class="ring-title assess">Assess</div>
-                <div class="item">Camunda
-                    <div class="desc">Motor de orquestração de processos BPM.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PLATFORMS -->
-        <div class="card">
-            <h2>Platforms</h2>
-
-            <div class="ring">
-                <div class="ring-title adopt">Adopt</div>
-                <div class="item">Azure API Management
-                    <div class="desc">Gateway padrão de APIs internas.</div>
-                </div>
-            </div>
-
-            <div class="ring">
-                <div class="ring-title trial">Trial</div>
-                <div class="item">Kafka
-                    <div class="desc">Plataforma de streaming de eventos.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- LANGUAGES & FRAMEWORKS -->
-        <div class="card">
-            <h2>Languages & Frameworks</h2>
-
-            <div class="ring">
-                <div class="ring-title adopt">Adopt</div>
-                <div class="item">Java 21
-                    <div class="desc">Linguagem principal backend.</div>
-                </div>
-                <div class="item">Spring Boot
-                    <div class="desc">Framework padrão para APIs.</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    <div id="radar" class="grid"></div>
 
     <footer>
-        Criado por Graciele
+        Criado por Graciele. Dados de exemplo – ajuste para refletir a realidade da Ailos. 💙
     </footer>
 </main>
 
+<script>
+    // 🔹 AQUI FICAM OS DADOS DO RADAR (SEU "JSON")
+    const radarData = [
+        // TECHNIQUES
+        {
+            name: "Domain-Driven Design (DDD)",
+            ring: "Adopt",
+            quadrant: "Techniques",
+            isNew: true,
+            description: "Modelagem de domínio alinhada ao negócio."
+        },
+        {
+            name: "Microservices",
+            ring: "Trial",
+            quadrant: "Techniques",
+            isNew: true,
+            description: "Arquitetura baseada em serviços independentes."
+        },
+
+        // TOOLS
+        {
+            name: "Camunda",
+            ring: "Assess",
+            quadrant: "Tools",
+            isNew: true,
+            description: "Motor de orquestração de processos BPM."
+        },
+
+        // PLATFORMS
+        {
+            name: "Azure API Management",
+            ring: "Adopt",
+            quadrant: "Platforms",
+            isNew: true,
+            description: "Gateway padrão de APIs internas."
+        },
+        {
+            name: "Kafka",
+            ring: "Trial",
+            quadrant: "Platforms",
+            isNew: true,
+            description: "Plataforma de streaming de eventos."
+        },
+
+        // LANGUAGES & FRAMEWORKS
+        {
+            name: "Java 21",
+            ring: "Adopt",
+            quadrant: "Languages & Frameworks",
+            isNew: true,
+            description: "Linguagem principal backend."
+        },
+        {
+            name: "Spring Boot",
+            ring: "Adopt",
+            quadrant: "Languages & Frameworks",
+            isNew: false,
+            description: "Framework padrão para APIs."
+        }
+    ];
+
+    const quadrants = ["Techniques", "Tools", "Platforms", "Languages & Frameworks"];
+    const ringsOrder = ["Adopt", "Trial", "Assess", "Hold"];
+
+    function groupByQuadrantAndRing(data) {
+        const result = {};
+        for (const q of quadrants) {
+            result[q] = {};
+            for (const r of ringsOrder) {
+                result[q][r] = [];
+            }
+        }
+
+        for (const item of data) {
+            if (!result[item.quadrant]) {
+                result[item.quadrant] = {};
+                for (const r of ringsOrder) {
+                    result[item.quadrant][r] = [];
+                }
+            }
+            if (!result[item.quadrant][item.ring]) {
+                result[item.quadrant][item.ring] = [];
+            }
+            result[item.quadrant][item.ring].push(item);
+        }
+        return result;
+    }
+
+    function ringClass(ring) {
+        switch (ring) {
+            case "Adopt": return "ring-badge ring-adopt";
+            case "Trial": return "ring-badge ring-trial";
+            case "Assess": return "ring-badge ring-assess";
+            case "Hold": return "ring-badge ring-hold";
+            default: return "ring-badge";
+        }
+    }
+
+    function renderRadar() {
+        const container = document.getElementById("radar");
+        const grouped = groupByQuadrantAndRing(radarData);
+
+        quadrants.forEach(q => {
+            const card = document.createElement("div");
+            card.className = "quadrant-card";
+
+            const title = document.createElement("h2");
+            title.className = "quadrant-title";
+            title.textContent = q;
+            card.appendChild(title);
+
+            const tag = document.createElement("div");
+            tag.className = "quadrant-tag";
+            tag.textContent = "Quadrante";
+            card.appendChild(tag);
+
+            ringsOrder.forEach(ring => {
+                const items = grouped[q][ring] || [];
+                if (!items.length) return;
+
+                const block = document.createElement("div");
+                block.className = "ring-block";
+
+                const ringTitle = document.createElement("div");
+                ringTitle.className = "ring-title";
+                const badge = document.createElement("span");
+                badge.className = ringClass(ring);
+                badge.textContent = ring.toUpperCase();
+                ringTitle.appendChild(badge);
+
+                block.appendChild(ringTitle);
+
+                const ul = document.createElement("ul");
+                ul.className = "item-list";
+
+                items.forEach(item => {
+                    const li = document.createElement("li");
+
+                    const nameSpan = document.createElement("span");
+                    nameSpan.className = "item-name";
+                    nameSpan.textContent = item.name;
+
+                    li.appendChild(nameSpan);
+
+                    if (item.isNew) {
+                        const newSpan = document.createElement("span");
+                        newSpan.className = "item-new";
+                        newSpan.textContent = "NEW";
+                        li.appendChild(newSpan);
+                    }
+
+                    if (item.description) {
+                        const descDiv = document.createElement("div");
+                        descDiv.className = "item-desc";
+                        descDiv.textContent = item.description;
+                        li.appendChild(descDiv);
+                    }
+
+                    ul.appendChild(li);
+                });
+
+                block.appendChild(ul);
+                card.appendChild(block);
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    renderRadar();
+</script>
 </body>
 </html>
+
