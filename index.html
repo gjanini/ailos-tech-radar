@@ -171,70 +171,449 @@
     <div id="radar" class="grid"></div>
 
     <footer>
-        Criado por Graciele. Dados de exemplo – ajuste para refletir a realidade da Ailos. 💙
+        Criado por Graciele - Arquitetura Ailos
     </footer>
 </main>
 
 <script>
-    // 🔹 AQUI FICAM OS DADOS DO RADAR (SEU "JSON")
+    // 🔹 DADOS DO RADAR
     const radarData = [
-        // TECHNIQUES
-        {
-            name: "Domain-Driven Design (DDD)",
-            ring: "Adopt",
-            quadrant: "Techniques",
-            isNew: true,
-            description: "Modelagem de domínio alinhada ao negócio."
-        },
-        {
-            name: "Microservices",
-            ring: "Trial",
-            quadrant: "Techniques",
-            isNew: true,
-            description: "Arquitetura baseada em serviços independentes."
-        },
+  // TECHNIQUES
+  {
+    name: "Domain-Driven Design (DDD)",
+    ring: "Adopt",
+    quadrant: "Techniques",
+    isNew: true,
+    description: "Abordagem para modelagem de domínios, tornando mais simples o que era complexo."
+  },
+  {
+    name: "Event-Driven Architecture (EDA)",
+    ring: "Adopt",
+    quadrant: "Techniques",
+    isNew: false,
+    description: "Técnica para construção de sistemas baseados em eventos."
+  },
+  {
+    name: "Microservice Architecture",
+    ring: "Trial",
+    quadrant: "Techniques",
+    isNew: true,
+    description: "Prática de decomposição de sistemas em serviços menores e independentes."
+  },
+  {
+    name: "Hexagonal Architecture",
+    ring: "Trial",
+    quadrant: "Techniques",
+    isNew: true,
+    description: "Também conhecida como Ports and Adapters, desacopla o domínio das dependências externas (frameworks, serviços externos, banco de dados, etc.)."
+  },
 
-        // TOOLS
-        {
-            name: "Camunda",
-            ring: "Assess",
-            quadrant: "Tools",
-            isNew: true,
-            description: "Motor de orquestração de processos BPM."
-        },
+  // PLATFORMS – Integração / APIs / Mensageria
+  {
+    name: "MuleSoft",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de integração e exposição de APIs."
+  },
+  {
+    name: "Sensedia API Management",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Gateway para gerenciamento, exposição e governança de APIs."
+  },
+  {
+    name: "Kafka",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de streaming de eventos e mensageria distribuída."
+  },
+  {
+    name: "AWS Lambda",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Execução de código serverless sob demanda na AWS."
+  },
+  {
+    name: "Azure Function",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Execução de código serverless sob demanda na Azure."
+  },
+  {
+    name: "AWS API Gateway",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Gerenciamento e exposição de APIs na AWS."
+  },
+  {
+    name: "WSO2",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de API Management e integração."
+  },
 
-        // PLATFORMS
-        {
-            name: "Azure API Management",
-            ring: "Adopt",
-            quadrant: "Platforms",
-            isNew: true,
-            description: "Gateway padrão de APIs internas."
-        },
-        {
-            name: "Kafka",
-            ring: "Trial",
-            quadrant: "Platforms",
-            isNew: true,
-            description: "Plataforma de streaming de eventos."
-        },
+  // PLATFORMS – Dados
+  {
+    name: "Databricks",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de lakehouse para processamento e análise de dados."
+  },
+  {
+    name: "Oracle",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco de dados relacional."
+  },
+  {
+    name: "MySQL",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco de dados relacional open source."
+  },
+  {
+    name: "PostgreSQL",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco de dados relacional avançado, padrão de mercado."
+  },
+  {
+    name: "SQL Server",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco de dados relacional Microsoft."
+  },
+  {
+    name: "Dataverse",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de dados da Microsoft para aplicações de negócio."
+  },
+  {
+    name: "AWS S3",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Armazenamento de objetos escalável na AWS."
+  },
+  {
+    name: "Redis",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco em memória e cache distribuído para alta performance."
+  },
+  {
+    name: "ElastiCache",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Serviço gerenciado de cache (Redis/Memcached) na AWS."
+  },
+  {
+    name: "SFTP",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Protocolo seguro para transferência de arquivos."
+  },
+  {
+    name: "MongoDB",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Banco de dados NoSQL orientado a documentos."
+  },
 
-        // LANGUAGES & FRAMEWORKS
-        {
-            name: "Java 21",
-            ring: "Adopt",
-            quadrant: "Languages & Frameworks",
-            isNew: true,
-            description: "Linguagem principal backend."
-        },
-        {
-            name: "Spring Boot",
-            ring: "Adopt",
-            quadrant: "Languages & Frameworks",
-            isNew: false,
-            description: "Framework padrão para APIs."
-        }
-    ];
+  // PLATFORMS – Governança / Dados / Observabilidade
+  {
+    name: "Backstage io",
+    ring: "Trial",
+    quadrant: "Platforms",
+    isNew: true,
+    description: "Plataforma de developer portal para centralizar serviços, catálogos e documentação técnica."
+  },
+  {
+    name: "MDM",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Gestão de dados mestres corporativos."
+  },
+  {
+    name: "IDQ",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de qualidade e governança de dados."
+  },
+  {
+    name: "Open Metadata",
+    ring: "Assess",
+    quadrant: "Platforms",
+    isNew: true,
+    description: "Solução open source para catálogo e governança de metadados."
+  },
+  {
+    name: "Dynatrace",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Observabilidade e monitoramento de aplicações."
+  },
+  {
+    name: "AWS CloudWatch",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Monitoramento e logs de recursos na AWS."
+  },
+  {
+    name: "Kiali",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Observabilidade para malhas de serviço (service mesh)."
+  },
+
+  // PLATFORMS – Identidade / Segurança
+  {
+    name: "AWS IAM",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Gerenciamento de identidade e permissões na AWS."
+  },
+  {
+    name: "Azure AD",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Gerenciamento de identidade e acesso na Azure."
+  },
+  {
+    name: "OneTrust",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de privacidade, consentimento e conformidade."
+  },
+  {
+    name: "IBM Qradar",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Solução SIEM para monitoramento e correlação de eventos de segurança."
+  },
+
+  // PLATFORMS – Orquestração / DevOps
+  {
+    name: "Kubernetes",
+    ring: "Adopt",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Orquestração de contêineres."
+  },
+  {
+    name: "Rancher",
+    ring: "Hold",
+    quadrant: "Platforms",
+    isNew: false,
+    description: "Plataforma de gestão de clusters Kubernetes."
+  },
+  {
+    name: "Argo",
+    ring: "Trial",
+    quadrant: "Platforms",
+    isNew: true,
+    description: "Ferramentas Argo (CD, Workflows, Rollouts) para entrega contínua e orquestração em Kubernetes."
+  },
+
+  // TOOLS – DevOps / Qualidade / Segurança
+  {
+    name: "Azure DevOps",
+    ring: "Adopt",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Plataforma para gestão de backlog, repositórios, pipelines e CI/CD."
+  },
+  {
+    name: "SonarQube",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Análise estática de código e qualidade."
+  },
+  {
+    name: "Fortify",
+    ring: "Adopt",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Ferramenta de análise de segurança de código (SAST)."
+  },
+  {
+    name: "Veracode",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Plataforma de análise de segurança de aplicações."
+  },
+  {
+    name: "Appdome",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Segurança e proteção para aplicativos mobile."
+  },
+  {
+    name: "Guardsquare",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Proteção de apps mobile (ofuscação e hardening)."
+  },
+  {
+    name: "IBM RPA",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Ferramenta de automação robótica de processos."
+  },
+  {
+    name: "Power Automate",
+    ring: "Adopt",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Automação de fluxos e integração com o ecossistema Microsoft."
+  },
+  {
+    name: "Ansible",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Automação de configuração e orquestração de infraestrutura."
+  },
+  {
+    name: "Terraform",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Infraestrutura como código para provisionamento em múltiplas clouds."
+  },
+  {
+    name: "Symantec",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Soluções de segurança endpoint e proteção de dados."
+  },
+  {
+    name: "Trend Micro",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Plataforma de segurança para endpoints, servidores e cloud."
+  },
+  {
+    name: "Microsoft Defender",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Proteção e detecção de ameaças no ecossistema Microsoft."
+  },
+  {
+    name: "Nessus",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Ferramenta de varredura de vulnerabilidades."
+  },
+  {
+    name: "Rapid7",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Plataforma de gestão de vulnerabilidades e segurança."
+  },
+  {
+    name: "Stimulsoft",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Ferramenta de relatórios e dashboards."
+  },
+  {
+    name: "Elastic",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Stack Elastic (Elasticsearch, Kibana, etc.) para busca e observabilidade."
+  },
+  {
+    name: "PostSearch",
+    ring: "Hold",
+    quadrant: "Tools",
+    isNew: false,
+    description: "Ferramenta de busca e indexação de conteúdo."
+  },
+
+  // LANGUAGES & FRAMEWORKS
+  {
+    name: "JavaScript",
+    ring: "Hold",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Linguagem para frontend web e aplicações em geral."
+  },
+  {
+    name: "Tailwind CSS",
+    ring: "Hold",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Framework utilitário de CSS para interfaces web."
+  },
+  {
+    name: "Angular",
+    ring: "Adopt",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Framework frontend para aplicações web SPA."
+  },
+  {
+    name: ".NET",
+    ring: "Adopt",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Plataforma para desenvolvimento backend e serviços."
+  },
+  {
+    name: "Go",
+    ring: "Hold",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Linguagem backend focada em concorrência e performance."
+  },
+  {
+    name: "ASP.NET Core",
+    ring: "Adopt",
+    quadrant: "Languages & Frameworks",
+    isNew: false,
+    description: "Framework backend moderno da plataforma .NET."
+  }
+];
 
     const quadrants = ["Techniques", "Tools", "Platforms", "Languages & Frameworks"];
     const ringsOrder = ["Adopt", "Trial", "Assess", "Hold"];
